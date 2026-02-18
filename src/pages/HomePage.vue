@@ -7,16 +7,24 @@
   </div>
   <div>
     <h1>Задачи</h1>
-    <div class="table__container" v-for="(task,index) in tasks" :key="task.id">
+    <div class="table__container" v-for="(task, index) in tasks" :key="task.id">
       <div class="table__item">
-      <p>Number: {{index + 1}}</p>
-      <p>Title: {{task.title}}</p> 
+        <p>Number: {{ index + 1 }}</p>
+
+        <div v-if="editId === task.id">
+          <input v-model="editTitle" />
+          <button @click="updateTask(task.id)">Сохранить</button>
+          <button @click="cancelEdit">Отмена</button>
+        </div>
+        <div v-else>
+          <p>Title: {{ task.title }}</p>
+        </div>
       </div>
-        <div>
+      <div>
         <button @click="deleteTask(task.id)">удалить</button>
-        <button>редактировать</button>
+        <button @click="startEdit(task)">Редактировать</button>
       </div>
-    </div> 
+    </div>
   </div>
 </template>
 
@@ -27,9 +35,28 @@ export default {
     return {
       tasks: [],
       title: "",
+      editId: null,
+      editTitle: "",
     };
   },
   methods: {
+    startEdit(task) {
+      this.editId = task.id;
+      this.editTitle = task.title;
+    },
+    cancelEdit() {
+      this.editId = null;
+      this.editTitle = "";
+    },
+    async updateTask(id) {
+      await axios.put(`http://localhost:8080/index.php`, {
+        id: id,
+        title: this.editTitle,
+      });
+      this.editId = null;
+      this.editTitle = "";
+      this.addTasks();
+    },
     async addTasks() {
       const response = await axios.get("http://localhost:8080/index.php");
       this.tasks = response.data.tasks;
@@ -42,11 +69,11 @@ export default {
       this.addTasks();
     },
     async deleteTask(id) {
-      await axios.delete(`http://localhost:8080/index.php`,{
+      await axios.delete(`http://localhost:8080/index.php`, {
         data: {
           id: id,
         },
-      }); 
+      });
       this.addTasks();
     },
   },
@@ -57,26 +84,26 @@ export default {
 </script>
 
 <style scoped>
-.table__container{
-  display: flex;  
-  border: 1px solid teal; 
+.table__container {
+  display: flex;
+  border: 1px solid teal;
   margin: 10px;
   align-items: center;
   justify-content: space-between;
   padding: 15px;
 }
-button { 
-  border: 1px solid teal; 
+button {
+  border: 1px solid teal;
   cursor: pointer;
   background-color: white;
   margin-inline: 5px;
   padding: 10px;
 }
-button:hover{
+button:hover {
   background-color: teal;
   color: white;
 }
-.table__item{
+.table__item {
   display: flex;
   flex-direction: column;
   gap: 10px;
