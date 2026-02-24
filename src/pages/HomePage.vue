@@ -28,8 +28,8 @@
     <h3>Мои задачи</h3>
 
     <div v-for="(task, index) in tasks" :key="task.id" class="tasks-items">
-      
-      <div v-if="editId === task.id" class="tasks__buttons">
+
+      <div v-if="editId === task.id" class="tasks__buttons">  <!-- если нажали на редактировать -->
         <input v-model="editTitle" />
         <button @click="updateTask(task.id)" class="tasks__buttons--modif">
           ✅
@@ -37,7 +37,7 @@
         <button @click="cancelEdit" class="tasks__buttons--modif">❌</button>
       </div>
 
-      <div v-else class="tasks__title">
+      <div v-else class="tasks__title"> 
         <p>{{ index + 1 + ". " + task.task_title }}</p>
       </div>
 
@@ -58,6 +58,7 @@
     </div>
   </div>
 </template> 
+
 <script>
 import axios from "axios";
 export default {
@@ -193,6 +194,7 @@ input {
 }
 /* end add */
 
+/* start tasks */
 .tasks {
   max-width: 980px;
   margin: 0 auto;
@@ -208,26 +210,23 @@ input {
   background-color: white;
   padding: 16px 24px;
   border: 1px solid #ccc;
-  border-radius: 4px; 
-}
-.tasks__title {
- 
+  border-radius: 4px;
 }
 .tasks__category {
   padding: 5px 10px;
   border-radius: 12px;
   background-color: #48aff3;
-  color: white;    
+  color: white;
 }
 .tasks__buttons {
   display: flex;
   justify-content: center;
-  gap: 10px; 
+  gap: 10px;
 }
-  
 .tasks__buttons--modif {
   background-color: white;
   border: none;
   cursor: pointer;
 }
+/* end tasks */
 </style>
